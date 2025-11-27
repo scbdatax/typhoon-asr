@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typhoon_asr import transcribe
+from typhoon_asr import transcribe, transcribe_isan
 
 def main():
     parser = argparse.ArgumentParser(description="Typhoon ASR Real-Time Inference")
@@ -8,11 +8,15 @@ def main():
     parser.add_argument('--model_name', type=str, default='scb10x/typhoon-asr-realtime', help='ASR model name')
     parser.add_argument("--with-timestamps", action="store_true", help="Generate estimated word timestamps")
     parser.add_argument("--device", choices=['auto', 'cpu', 'cuda'], default='auto', help="Processing device (default: auto)")
+    parser.add_argument("--isan", action="store_true", help="Use the Isan ASR model (scb10x/typhoon-isan-asr-realtime)")
 
     args = parser.parse_args()
 
     try:
-        result = transcribe(args.input_file, model_name=args.model_name, with_timestamps=args.with_timestamps, device=args.device)
+        if args.isan:
+            result = transcribe_isan(args.input_file, with_timestamps=args.with_timestamps, device=args.device)
+        else:
+            result = transcribe(args.input_file, model_name=args.model_name, with_timestamps=args.with_timestamps, device=args.device)
 
         rtf = result['processing_time'] / result['audio_duration'] if result['audio_duration'] > 0 else 0
         
