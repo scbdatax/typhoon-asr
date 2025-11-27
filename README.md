@@ -81,11 +81,17 @@ python typhoon_asr_inference.py path/to/your_audio.wav --with-timestamps
 python typhoon_asr_inference.py path/to/your_audio.mp3 --device cuda
 ```
 
+**Transcription with a Typhoon Isan ASR model:**
+```bash
+python typhoon_asr_inference.py path/to/your_audio.wav --model scb10x/typhoon-isan-asr-realtime
+```
+
 ### Arguments
 
 *   `input_file`: (Required) The path to your input audio file.
 *   `--with-timestamps`: (Optional) Flag to generate and display estimated word timestamps.
 *   `--device`: (Optional) The device to run inference on. Choices: `auto`, `cpu`, `cuda`. Defaults to `auto`.
+*   `--model`: (Optional) The model to use for transcription. Defaults to `scb10x/typhoon-asr-realtime`.
 
 ### Example Output
 
