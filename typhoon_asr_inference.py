@@ -82,13 +82,13 @@ def prepare_audio(input_path, output_path=None, target_sr=16000):
     }
 
 
-def load_typhoon_model(device='auto', is_isan=False):
+def load_typhoon_model(device='auto', model_name="scb10x/typhoon-asr-realtime"):
     """
     Load Typhoon ASR Real-Time model
 
     Args:
         device (str): Device to use ('auto', 'cpu', 'cuda')
-        is_isan (bool): Whether to load the Isan model
+        model_name (str): Name of the model to load
 
     Returns:
         ASR model object
@@ -96,10 +96,7 @@ def load_typhoon_model(device='auto', is_isan=False):
     if device == 'auto':
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    model_name = "scb10x/typhoon-isan-asr-realtime" if is_isan else "scb10x/typhoon-asr-realtime"
-    model_display_name = "Typhoon Isan ASR Real-Time" if is_isan else "Typhoon ASR Real-Time"
-
-    print(f"🌪️ Loading {model_display_name} model...")
+    print(f"🌪️ Loading model...")
     print(f"   Device: {device.upper()}")
     print(f"   Model: {model_name}")
 
@@ -200,8 +197,8 @@ def main():
                        help="Generate estimated word timestamps")
     parser.add_argument("--device", choices=['auto', 'cpu', 'cuda'], default='auto',
                        help="Processing device (default: auto)")
-    parser.add_argument("--isan", action="store_true",
-                       help="Use Typhoon Isan ASR model")
+    parser.add_argument("--model", type=str, default="scb10x/typhoon-asr-realtime",
+                       help="Model name to use for transcription (default: scb10x/typhoon-asr-realtime)")
 
     args = parser.parse_args()
 
@@ -214,7 +211,7 @@ def main():
         return 1
 
     # Load model
-    model = load_typhoon_model(args.device, args.isan)
+    model = load_typhoon_model(args.device, args.model)
     if model is None:
         return 1
 
@@ -229,7 +226,7 @@ def main():
         return 1
 
     # Calculate performance metrics
-    audio_duration = info['duration']
+    audio_duration = float(info['duration'])
 
     # Run inference
     if args.with_timestamps:
