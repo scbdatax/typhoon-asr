@@ -129,10 +129,11 @@ class TestTyphoonASRCLI:
             with patch('typhoon_asr_inference.nemo_asr.models.ASRModel.from_pretrained', return_value=mock_model) as mock_load:
                 typhoon_asr_inference.load_typhoon_model('auto')
                 
-                mock_load.assert_called_once_with(
-                    model_name="scb10x/typhoon-asr-realtime",
-                    map_location='cpu'
-                )
+                # Check that mock was called with correct device (as string)
+                mock_load.assert_called_once()
+                call_args = mock_load.call_args
+                assert call_args.kwargs['model_name'] == "scb10x/typhoon-asr-realtime"
+                assert str(call_args.kwargs['map_location']) == 'cpu'
 
     def test_load_typhoon_model_auto_cuda(self, mock_model):
         """Test auto device selection when CUDA available"""
@@ -140,10 +141,11 @@ class TestTyphoonASRCLI:
             with patch('typhoon_asr_inference.nemo_asr.models.ASRModel.from_pretrained', return_value=mock_model) as mock_load:
                 typhoon_asr_inference.load_typhoon_model('auto')
                 
-                mock_load.assert_called_once_with(
-                    model_name="scb10x/typhoon-asr-realtime",
-                    map_location='cuda'
-                )
+                # Check that mock was called with correct device (as string)
+                mock_load.assert_called_once()
+                call_args = mock_load.call_args
+                assert call_args.kwargs['model_name'] == "scb10x/typhoon-asr-realtime"
+                assert str(call_args.kwargs['map_location']) == 'cuda'
 
     def test_basic_transcription(self, mock_model):
         """Test basic transcription function"""
