@@ -252,7 +252,7 @@ def main():
         print(" ✅ (Batch processing)")
 
     print(f"\nTranscription:")
-    print(f"'{transcription.text}'")
+    print(f"'{transcription}'")
 
     # Show timestamps if available
     if timestamps:

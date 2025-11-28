@@ -26,7 +26,7 @@ def transcribe(input_file, model_name: str = "scb10x/typhoon-asr-realtime", with
         if not input_path.exists():
             raise FileNotFoundError(f"File not found: {input_path}")
 
-        supported_formats = ['.wav', '.mp3', '.m4a', '.flac', '.ogg', '.aac', '.webm']
+        supported_formats = ['.wav', '.mp3', '.flac', '.ogg']
         if input_path.suffix.lower() not in supported_formats:
             raise ValueError(f"Unsupported format: {input_path.suffix}. Supported formats are: {supported_formats}")
 
