@@ -4,7 +4,7 @@ Typhoon ASR Real-Time is a next-generation, open-source Automatic Speech Recogni
 
 This repository provides a simple command-line script to demonstrate the performance and features of the Typhoon ASR Real-Time model.
 
-See the blog for more detail: [https://opentyphoon.ai/blog/th/typhoon-asr-real-time-release]()
+See the blog for more detail: [https://opentyphoon.ai/blog/th/typhoon-asr-realtime-release](https://opentyphoon.ai/blog/en/typhoon-asr-realtime-release)
 
 ## Quick Start with Google Colab
 For a hands-on demonstration without any local setup, you can run this project directly in Google Colab. The notebook provides a complete environment to transcribe audio files and experiment with the model.
@@ -29,7 +29,7 @@ For a hands-on demonstration without any local setup, you can run this project d
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/scb10x/typhoon-asr.git
+    git clone git@github.com:scb-10x/typhoon-asr.git
     cd typhoon-asr
     ```
 
@@ -81,11 +81,17 @@ python typhoon_asr_inference.py path/to/your_audio.wav --with-timestamps
 python typhoon_asr_inference.py path/to/your_audio.mp3 --device cuda
 ```
 
+**Transcription with a Typhoon Isan ASR model:**
+```bash
+python typhoon_asr_inference.py path/to/your_audio.wav --model scb10x/typhoon-isan-asr-realtime
+```
+
 ### Arguments
 
 *   `input_file`: (Required) The path to your input audio file.
 *   `--with-timestamps`: (Optional) Flag to generate and display estimated word timestamps.
 *   `--device`: (Optional) The device to run inference on. Choices: `auto`, `cpu`, `cuda`. Defaults to `auto`.
+*   `--model`: (Optional) The model to use for transcription. Defaults to `scb10x/typhoon-asr-realtime`.
 
 ### Example Output
 

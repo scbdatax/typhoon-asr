@@ -82,12 +82,13 @@ def prepare_audio(input_path, output_path=None, target_sr=16000):
     }
 
 
-def load_typhoon_model(device='auto'):
+def load_typhoon_model(device='auto', model_name="scb10x/typhoon-asr-realtime"):
     """
     Load Typhoon ASR Real-Time model
 
     Args:
         device (str): Device to use ('auto', 'cpu', 'cuda')
+        model_name (str): Name of the model to load
 
     Returns:
         ASR model object
@@ -95,12 +96,13 @@ def load_typhoon_model(device='auto'):
     if device == 'auto':
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    print(f"🌪️ Loading Typhoon ASR Real-Time model...")
+    print(f"🌪️ Loading model...")
     print(f"   Device: {device.upper()}")
+    print(f"   Model: {model_name}")
 
     model = nemo_asr.models.ASRModel.from_pretrained(
-        model_name="scb10x/typhoon-asr-realtime",
-        map_location=device
+        model_name=model_name,
+        map_location=torch.device(device)
     )
 
     if model is None:
@@ -195,6 +197,8 @@ def main():
                        help="Generate estimated word timestamps")
     parser.add_argument("--device", choices=['auto', 'cpu', 'cuda'], default='auto',
                        help="Processing device (default: auto)")
+    parser.add_argument("--model", type=str, default="scb10x/typhoon-asr-realtime",
+                       help="Model name to use for transcription (default: scb10x/typhoon-asr-realtime)")
 
     args = parser.parse_args()
 
@@ -207,7 +211,7 @@ def main():
         return 1
 
     # Load model
-    model = load_typhoon_model(args.device)
+    model = load_typhoon_model(args.device, args.model)
     if model is None:
         return 1
 
@@ -222,7 +226,7 @@ def main():
         return 1
 
     # Calculate performance metrics
-    audio_duration = info['duration']
+    audio_duration = float(info['duration'])
 
     # Run inference
     if args.with_timestamps:
@@ -266,7 +270,7 @@ def main():
 
 
     # Cleanup processed file if it's temporary
-    if processed_file.startswith("processed_") and os.path.exists(processed_file):
+    if processed_file and processed_file.startswith("processed_") and os.path.exists(processed_file):
         os.remove(processed_file)
         print(f"🧹 Cleaned up temporary file: {processed_file}")
 
